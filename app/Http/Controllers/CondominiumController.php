@@ -8,9 +8,14 @@ use App\Models\Condominium;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class CondominiumController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +23,31 @@ class CondominiumController extends Controller
      */
     public function index()
     {
-        return view('condominium.lista', ['xptoCollection' => Condominium::all()]);
+        // select * from users
+        $users = User::all();
+
+        // select * from condominiums;
+        $condominiumList = Condominium::all();
+        return view('condominium.lista', array(
+            'xptoCollection' => $condominiumList, 'users' => $users
+        ));
+    }
+
+    public function search(Request $request) 
+    {
+        // select * from users 
+        $users = User::all();
+
+        // select * from condominiums where user_sindico_id = ?
+        $condominium = Condominium::where('user_sindico_id', '=', $request->get('sindico'));
+        if ($request->filled('id')) {
+            $condominium->where('id', '=', $request->get('id'));
+        }
+
+        $lista = $condominium->get();
+        return view('condominium.lista', array(
+            'xptoCollection' => $lista, 'users' => $users
+        ));
     }
 
     /**
@@ -57,7 +86,7 @@ class CondominiumController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Condominium $condominium)
-    {
+    {    
         $users = User::all();
         return view('condominium.form', [
             'users' => $users,

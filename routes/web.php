@@ -25,6 +25,7 @@ Route::get('/dashboard', function () {
 
 
 Route::get('/condominio', [CondominiumController::class, 'index'])->middleware('auth')->name('condominium.index');
+Route::get('/condominio/search', [CondominiumController::class, 'search'])->middleware('auth')->name('condominium.search');
 Route::get('/condominio/novo', [CondominiumController::class, 'create'])->middleware('auth')->name('condominium.create');
 Route::post('/condominio', [CondominiumController::class, 'store'])->middleware('auth')->name('condominium.store');
 Route::get('/condominio/{condominium}', [CondominiumController::class, 'show'])->middleware('auth')->name('condominium.show');
